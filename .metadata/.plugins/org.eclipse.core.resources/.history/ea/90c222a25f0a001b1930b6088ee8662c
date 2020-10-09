@@ -1,0 +1,112 @@
+
+import java.awt.Color;
+
+import com.google.gson.Gson;
+
+import model.Character;
+import model.Guide;
+import model.Movimiento;
+import model.Nombre;
+import processing.core.PApplet;
+
+public class Server extends PApplet {
+
+	private TCPSingleton tcp;
+	private Character character;
+	private Nombre name;
+	private Movimiento movement;
+	private Color color;
+
+	public static void main(String[] args) {
+		PApplet.main("Server");
+
+	}
+
+	public void settings() {
+		size(600, 600);
+	}
+
+	public void setup() {
+
+		// realizacion de la suscripcion
+		tcp = TCPSingleton.getInstance();
+		tcp.setServer(this);
+		tcp.start();
+
+		if (tcp.getActivador() == true) {
+			
+			character.setName(name.getName());
+			
+			if(color.getColor() == "red") {
+				
+			}
+			
+			switch (movement.getMovement()) {
+
+			case "up":
+
+				character.setPosY(character.getPosY() - 1);
+
+				break;
+
+			case "down":
+
+				character.setPosY(character.getPosY() + 1);
+
+				break;
+
+			case "left":
+
+				character.setPosX(character.getPosX() - 1);
+
+				break;
+
+			case "right":
+
+				character.setPosX(character.getPosX() + 1);
+
+				break;
+			}
+		}
+	}
+
+	public void draw() {
+		background(0);
+
+		character.paint();
+
+	}
+
+	public void messageArrival(String message) {
+		// TODO Auto-generated method stub
+
+		// poner aca el uso que se busca dar a los datos
+
+		Gson gson = new Gson();
+
+		Guide guide = gson.fromJson(message, Guide.class);
+
+		switch (guide.getType()) {
+
+		case "Movimiento":
+
+			Movimiento mov = gson.fromJson(message, Movimiento.class);
+
+			break;
+
+		case "Color":
+
+			Color col = gson.fromJson(message, Color.class);
+
+			break;
+
+		case "Nombre":
+
+			Nombre com = gson.fromJson(message, Nombre.class);
+
+			break;
+
+		}
+		System.out.println("datos recibidos:" + " " + message);
+	}
+}

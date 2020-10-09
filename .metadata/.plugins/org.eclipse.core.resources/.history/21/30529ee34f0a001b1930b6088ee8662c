@@ -1,0 +1,12 @@
+package model;
+
+public class Character {
+	
+	private int posX;
+	private int posY;
+	private String name;
+	private int r;
+	private int g;
+	private int b;
+
+}
